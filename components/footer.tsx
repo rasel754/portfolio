@@ -1,168 +1,138 @@
 "use client"
 
-import Link from "next/link"
-import { Github, Linkedin, Mail, Facebook } from "lucide-react"
 import { motion } from "framer-motion"
+import { Github, Linkedin, Mail, Heart } from "lucide-react"
+
+const socialLinks = [
+  {
+    icon: Github,
+    label: "GitHub",
+    href: "https://github.com/rasel754",
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/rasel754",
+  },
+  {
+    icon: Mail,
+    label: "Email",
+    href: "mailto:raselahmed73614@gmail.com",
+  },
+]
+
+const navLinks = [
+  { href: "#home", label: "Home" },
+  { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
+  { href: "#projects", label: "Projects" },
+  { href: "#blog", label: "Blog" },
+  { href: "#contact", label: "Contact" },
+]
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
-  const footerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
+  const handleNavClick = (href: string) => {
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
   }
 
   return (
-    <motion.footer
-      className="bg-muted py-12 relative"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={footerVariants}
-    >
+    <footer className="relative border-t border-border bg-card/50 backdrop-blur-sm">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <motion.div className="md:col-span-2" variants={itemVariants}>
-            <Link
-              href="/"
-              className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-8 text-center"
+          >
+            <button
+              onClick={() => handleNavClick("#home")}
+              className="group inline-flex items-center gap-2"
             >
-              Rasel Ahmed
-            </Link>
-            <p className="mt-4 text-muted-foreground max-w-md">
-              A passionate MERN Stack Developer focused on creating intuitive and efficient web applications that solve
-              real-world problems.
+              <div className="relative flex h-10 w-10 items-center justify-center">
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary via-secondary to-accent opacity-80" />
+                <div className="absolute inset-[2px] rounded-[6px] bg-background" />
+                <span className="relative font-heading text-lg font-bold gradient-text">
+                  RA
+                </span>
+              </div>
+              <span className="font-heading text-xl font-semibold text-foreground">
+                Rasel Ahmed
+              </span>
+            </button>
+            <p className="mt-4 max-w-md text-sm text-muted-foreground">
+              A passionate MERN Stack Developer building modern, scalable web
+              applications with clean code and exceptional user experiences.
             </p>
-            <div className="flex space-x-4 mt-6">
-              <motion.a
-                href="hhttps://github.com/rasel754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-                whileHover={{ y: -5, scale: 1.2 }}
-              >
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </motion.a>
-              <motion.a
-                href="https://linkedin.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-                whileHover={{ y: -5, scale: 1.2 }}
-              >
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </motion.a>
-              <motion.a
-                href="https://www.facebook.com/share/1C3hEcXE42/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-                whileHover={{ y: -5, scale: 1.2 }}
-              >
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </motion.a>
-              <motion.a
-                href="raselahmed73614@gmail.com"
-                className="hover:text-primary transition-colors"
-                whileHover={{ y: -5, scale: 1.2 }}
-              >
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Email</span>
-              </motion.a>
-            </div>
           </motion.div>
 
-          <motion.div variants={itemVariants}>
-            <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              {[
-                { href: "/", label: "Home" },
-                { href: "/#about", label: "About" },
-                { href: "/#skills", label: "Skills" },
-                { href: "/projects", label: "Projects" },
-                { href: "/blog", label: "Blog" },
-                { href: "/#contact", label: "Contact" },
-              ].map((link, index) => (
-                <motion.li
-                  key={link.href}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ x: 5 }}
-                >
-                  <Link href={link.href} className="text-muted-foreground hover:text-primary transition-colors">
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+          >
+            <ul className="flex flex-wrap justify-center gap-6">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <button
+                    onClick={() => handleNavClick(link.href)}
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                  >
                     {link.label}
-                  </Link>
-                </motion.li>
+                  </button>
+                </li>
               ))}
             </ul>
+          </motion.nav>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mb-8 flex gap-4"
+          >
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/50 transition-all hover:border-primary hover:bg-primary/10"
+                aria-label={link.label}
+              >
+                <link.icon className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+              </a>
+            ))}
           </motion.div>
 
-          <motion.div variants={itemVariants}>
-            <h3 className="font-semibold text-lg mb-4">Contact Info</h3>
-            <ul className="space-y-2">
-              <motion.li className="text-muted-foreground" whileHover={{ x: 5 }}>
-                Savar, Dhaka-1340, Bangladesh
-              </motion.li>
-              <motion.li whileHover={{ x: 5 }}>
-                <Link
-                  href="mailto:rasel.ahmed@example.com"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  raselahmed73614@gmail.com
-                </Link>
-              </motion.li>
-              <motion.li whileHover={{ x: 5 }}>
-                <Link href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
-                 +8801624490189
-                </Link>
-              </motion.li>
-            </ul>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col items-center gap-2 border-t border-border pt-8 text-center"
+          >
+            <p className="flex items-center gap-1 text-sm text-muted-foreground">
+              Built with{" "}
+              <Heart className="h-4 w-4 fill-red-500 text-red-500" /> by Rasel
+              Ahmed
+            </p>
+            <p className="text-sm text-muted-foreground">
+              &copy; {currentYear} Rasel Ahmed. All rights reserved.
+            </p>
           </motion.div>
         </div>
-
-        <motion.div
-          variants={itemVariants}
-          className="border-t border-border mt-12 pt-6 flex flex-col md:flex-row justify-between items-center"
-        >
-          <p className="text-sm text-muted-foreground">&copy; {currentYear} Rasel Ahmed. All rights reserved.</p>
-          <div className="mt-4 md:mt-0">
-            <ul className="flex space-x-6 text-sm">
-              <motion.li whileHover={{ scale: 1.05 }}>
-                <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
-                </Link>
-              </motion.li>
-              <motion.li whileHover={{ scale: 1.05 }}>
-                <Link href="/terms-of-service" className="text-muted-foreground hover:text-primary transition-colors">
-                  Terms of Service
-                </Link>
-              </motion.li>
-            </ul>
-          </div>
-        </motion.div>
       </div>
-    </motion.footer>
+    </footer>
   )
 }
