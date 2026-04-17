@@ -1,100 +1,152 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
-import { BlogCard } from "./blog-card"
+import Image from "next/image"
+import { motion, useInView } from "framer-motion"
+import { Calendar, Clock, ArrowRight, ExternalLink } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { blogPosts } from "@/lib/data"
+
+function BlogCard({
+  post,
+  index,
+  isInView,
+}: {
+  post: (typeof blogPosts)[0]
+  index: number
+  isInView: boolean
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="group relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80"
+    >
+      <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-3xl transition-all group-hover:scale-150" />
+
+      <div className="relative aspect-video overflow-hidden">
+        <Image
+          src={post.image}
+          alt={post.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+
+        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {post.date}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {post.readTime}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative p-6">
+        <div className="mb-3 flex flex-wrap gap-2">
+          {post.tags.map((tag) => (
+            <Badge
+              key={tag}
+              variant="secondary"
+              className="bg-primary/10 text-primary text-xs hover:bg-primary/20"
+            >
+              {tag}
+            </Badge>
+          ))}
+        </div>
+
+        <h3 className="mb-3 font-heading text-xl font-semibold text-foreground line-clamp-2 transition-colors group-hover:text-primary">
+          {post.title}
+        </h3>
+
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
+          {post.excerpt}
+        </p>
+
+        <a
+          href={post.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-all hover:gap-3"
+        >
+          Read Article
+          <ArrowRight className="h-4 w-4" />
+        </a>
+      </div>
+    </motion.article>
+  )
+}
 
 export default function BlogSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  // Only show 3 blog posts on the home page
-  const featuredPosts = blogPosts.slice(0, 3)
-
-  const titleVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  }
-
   return (
-    <section id="blog" className="py-20 bg-dot-pattern">
-      <div className="container mx-auto px-4">
+    <section
+      id="blog"
+      ref={ref}
+      className="relative py-24 md:py-32 overflow-hidden"
+    >
+      <div className="absolute inset-0 dot-pattern opacity-30" />
+
+      <div className="container relative z-10 mx-auto px-4">
         <motion.div
-          ref={ref}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1 },
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-16 text-center"
         >
-          <div className="text-center mb-12">
-            <motion.h2 variants={titleVariants} className="text-3xl font-bold mb-4 relative inline-block">
-              <span className="relative">
-                Latest Blog Posts
-                <motion.span
-                  className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary"
-                  initial={{ width: "0%" }}
-                  animate={isInView ? { width: "100%" } : { width: "0%" }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                />
-              </span>
-            </motion.h2>
-            <motion.p variants={titleVariants} className="text-muted-foreground max-w-2xl mx-auto">
-              I share my knowledge and experiences through writing. Check out some of my latest articles.
-            </motion.p>
-          </div>
+          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-primary">
+            Latest Articles
+          </span>
+          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
+            From My Blog
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            I write about web development, programming tips, and my experiences
+            as a developer. Here are some of my recent articles.
+          </p>
+        </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredPosts.map((post, index) => (
-              <motion.div
-                key={post.id}
-                custom={index}
-                variants={{
-                  hidden: { opacity: 0, y: 50 },
-                  visible: (i) => ({
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      delay: 0.2 + i * 0.1,
-                      duration: 0.5,
-                    },
-                  }),
-                }}
-              >
-                <BlogCard post={post} />
-              </motion.div>
-            ))}
-          </div>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {blogPosts.map((post, index) => (
+            <BlogCard
+              key={post.id}
+              post={post}
+              index={index}
+              isInView={isInView}
+            />
+          ))}
+        </div>
 
-          <motion.div className="mt-12 text-center" variants={titleVariants} transition={{ delay: 0.6 }}>
-            <Button asChild size="lg" className="relative overflow-hidden group">
-              <Link href="/blog">
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 flex items-center">
-                  View All Posts
-                  <motion.span
-                    className="ml-2"
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Number.POSITIVE_INFINITY,
-                      repeatType: "reverse",
-                    }}
-                  >
-                    →
-                  </motion.span>
-                </span>
-              </Link>
-            </Button>
-          </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.5 }}
+          className="mt-12 text-center"
+        >
+          <Button
+            size="lg"
+            variant="outline"
+            asChild
+            className="group border-primary/50 hover:bg-primary/10"
+          >
+            <a
+              href="https://dly.to/OveKzgglTH0"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View All Articles
+              <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+          </Button>
         </motion.div>
       </div>
     </section>
