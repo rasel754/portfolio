@@ -60,6 +60,7 @@ export default function ContactSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [responseMessage, setResponseMessage] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -69,15 +70,36 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setResponseMessage("")
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const res = await fetch("http://localhost:5000/api/p4/sendMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    setFormData({ name: "", email: "", message: "" })
+      const data = await res.json()
 
-    setTimeout(() => setIsSubmitted(false), 5000)
+      if (res.ok && data.success) {
+        setIsSubmitted(true)
+        setResponseMessage(data.message || "Message sent successfully! I'll get back to you soon.")
+        setFormData({ name: "", email: "", message: "" })
+        setTimeout(() => {
+          setIsSubmitted(false)
+          setResponseMessage("")
+        }, 5000)
+      } else {
+        setResponseMessage(data.message || "Failed to send message. Please try again.")
+      }
+    } catch (error) {
+      console.error(error)
+      setResponseMessage("Network error. Please check your connection and try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (
@@ -293,6 +315,26 @@ export default function ContactSection() {
                     </span>
                   )}
                 </Button>
+
+                {responseMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`p-4 rounded-xl text-sm font-medium border flex items-start gap-3 backdrop-blur-sm ${
+                      isSubmitted 
+                        ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' 
+                        : 'bg-destructive/10 border-destructive/20 text-destructive'
+                    }`}
+                  >
+                    {isSubmitted ? (
+                      <CheckCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                    ) : (
+                      <div className="h-5 w-5 shrink-0 rounded-full border-2 border-current flex items-center justify-center mt-0.5"><span className="text-xs">!</span></div>
+                    )}
+                    <p>{responseMessage}</p>
+                  </motion.div>
+                )}
               </form>
             </div>
           </motion.div>
