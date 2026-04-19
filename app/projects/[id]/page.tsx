@@ -1,18 +1,24 @@
-import { projects } from "@/lib/data"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Github, ExternalLink } from "lucide-react"
 
-export async function generateStaticParams() {
-  return projects.map((project) => ({
-    id: project.id,
-  }))
+async function getProject(id: string) {
+  try {
+    const res = await fetch(`http://localhost:5000/api/p4/projects/${id}`, { cache: "no-store" })
+    if (!res.ok) return null
+    const json = await res.json()
+    if (json.success) return { ...json.data, id: json.data._id }
+    return null
+  } catch (err) {
+    return null
+  }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const project = projects.find((p) => p.id === params.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
+  const project = await getProject(resolvedParams.id)
 
   if (!project) {
     return {
@@ -27,8 +33,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const project = projects.find((p) => p.id === params.id)
+export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
+  const project = await getProject(resolvedParams.id)
 
   if (!project) {
     notFound()

@@ -1,19 +1,20 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { ExternalLink, Github, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { projects } from "@/lib/data"
+import Link from "next/link"
+import { Project } from "./project-card"
 
 function ProjectCard({
   project,
   index,
   isInView,
 }: {
-  project: (typeof projects)[0]
+  project: Project
   index: number
   isInView: boolean
 }) {
@@ -126,7 +127,7 @@ function ProjectCard({
           </p>
 
           <div className="mb-4 flex flex-wrap gap-2">
-            {project.technologies.slice(0, 4).map((tech) => (
+            {project.technologies?.slice(0, 4).map((tech: string) => (
               <Badge
                 key={tech}
                 variant="secondary"
@@ -135,7 +136,7 @@ function ProjectCard({
                 {tech}
               </Badge>
             ))}
-            {project.technologies.length > 4 && (
+            {project.technologies && project.technologies.length > 4 && (
               <Badge variant="outline" className="text-muted-foreground">
                 +{project.technologies.length - 4}
               </Badge>
@@ -175,14 +176,16 @@ function ProjectCard({
                 </a>
               </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-primary hover:bg-primary/10"
-            >
-              Details
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
+            <Link href={`/projects/${project.id}`}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 text-primary hover:bg-primary/10"
+              >
+                Details
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -193,6 +196,25 @@ function ProjectCard({
 export default function ProjectsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [projectsList, setProjectsList] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/p4/projects")
+        const data = await res.json()
+        if (data.success) {
+          setProjectsList(data.data.slice(0, 3).map((p: any) => ({ ...p, id: p._id })))
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchProjects()
+  }, [])
 
   return (
     <section
@@ -222,14 +244,20 @@ export default function ProjectsSection() {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              isInView={isInView}
-            />
-          ))}
+          {isLoading ? (
+            <div className="col-span-full py-12 text-center text-muted-foreground">Loading projects...</div>
+          ) : projectsList.length > 0 ? (
+            projectsList.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                isInView={isInView}
+              />
+            ))
+          ) : (
+            <div className="col-span-full py-12 text-center text-muted-foreground">No projects found.</div>
+          )}
         </div>
 
         <motion.div
@@ -244,14 +272,10 @@ export default function ProjectsSection() {
             asChild
             className="group border-primary/50 hover:bg-primary/10"
           >
-            <a
-              href="https://github.com/rasel754"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View All Projects on GitHub
+            <Link href="/projects">
+              View All Projects
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
+            </Link>
           </Button>
         </motion.div>
       </div>
