@@ -66,3 +66,10 @@ export async function deleteBlog(id: string) {
   if (!res.ok) throw new Error("Failed to delete blog")
   return res.json()
 }
+
+export async function fetchMessages() {
+  const res = await fetch(`${BASE_URL}`, { cache: "no-store" })
+  if (!res.ok) throw new Error("Failed to fetch messages")
+  const data = await res.json()
+  return data.data || data
+}
