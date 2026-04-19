@@ -5,6 +5,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Sun, Moon } from "lucide-react"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
 const navLinks = [
@@ -22,6 +23,11 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home")
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
+
+  if (pathname?.startsWith("/rasel754")) {
+    return null
+  }
 
   useEffect(() => {
     setMounted(true)

@@ -2,11 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import { usePathname } from "next/navigation"
 
 export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const pathname = usePathname()
+
+  if (pathname?.startsWith("/rasel754")) {
+    return null
+  }
 
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {

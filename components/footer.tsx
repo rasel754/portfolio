@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Github, Linkedin, Mail, Heart } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 const socialLinks = [
   {
@@ -32,6 +33,11 @@ const navLinks = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const pathname = usePathname()
+
+  if (pathname?.startsWith("/rasel754")) {
+    return null
+  }
 
   const handleNavClick = (href: string) => {
     const element = document.querySelector(href)
