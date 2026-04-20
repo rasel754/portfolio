@@ -1,19 +1,19 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import { Calendar, Clock, ArrowRight, ExternalLink } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { blogPosts } from "@/lib/data"
+import Link from "next/link"
 
 function BlogCard({
   post,
   index,
   isInView,
 }: {
-  post: (typeof blogPosts)[0]
+  post: any
   index: number
   isInView: boolean
 }) {
@@ -51,7 +51,7 @@ function BlogCard({
 
       <div className="relative p-6">
         <div className="mb-3 flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
+          {post.tags?.map((tag: string) => (
             <Badge
               key={tag}
               variant="secondary"
@@ -87,6 +87,25 @@ function BlogCard({
 export default function BlogSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [blogsList, setBlogsList] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/p4/blogs")
+        const data = await res.json()
+        if (data.success) {
+          setBlogsList(data.data.slice(0, 3).map((b: any) => ({ ...b, id: b._id })))
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchBlogs()
+  }, [])
 
   return (
     <section
@@ -116,14 +135,20 @@ export default function BlogSection() {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.map((post, index) => (
-            <BlogCard
-              key={post.id}
-              post={post}
-              index={index}
-              isInView={isInView}
-            />
-          ))}
+          {isLoading ? (
+            <div className="col-span-full py-12 text-center text-muted-foreground">Loading blogs...</div>
+          ) : blogsList.length > 0 ? (
+            blogsList.map((post, index) => (
+              <BlogCard
+                key={post.id}
+                post={post}
+                index={index}
+                isInView={isInView}
+              />
+            ))
+          ) : (
+            <div className="col-span-full py-12 text-center text-muted-foreground">No blogs found.</div>
+          )}
         </div>
 
         <motion.div
@@ -138,14 +163,10 @@ export default function BlogSection() {
             asChild
             className="group border-primary/50 hover:bg-primary/10"
           >
-            <a
-              href="https://dly.to/OveKzgglTH0"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href="/blog">
               View All Articles
-              <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </Button>
         </motion.div>
       </div>
