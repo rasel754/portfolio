@@ -1,23 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion, useInView } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const technicalSkills = [
-  { name: "JavaScript", level: 90, color: "from-yellow-400 to-yellow-600" },
-  { name: "React.js", level: 85, color: "from-cyan-400 to-cyan-600" },
-  { name: "Node.js", level: 80, color: "from-green-400 to-green-600" },
-  { name: "Express.js", level: 85, color: "from-gray-400 to-gray-600" },
-  { name: "MongoDB", level: 75, color: "from-green-500 to-green-700" },
-  { name: "Next.js", level: 80, color: "from-black to-gray-700 dark:from-white dark:to-gray-300" },
-  { name: "TypeScript", level: 70, color: "from-blue-400 to-blue-600" },
-  { name: "REST APIs", level: 85, color: "from-purple-400 to-purple-600" },
-  { name: "HTML/CSS", level: 90, color: "from-orange-400 to-red-500" },
-  { name: "Tailwind CSS", level: 85, color: "from-teal-400 to-teal-600" },
-  { name: "Redux", level: 75, color: "from-violet-400 to-violet-600" },
-  { name: "Git", level: 80, color: "from-orange-500 to-red-600" },
-]
+// Static fallback while API loads — removed in favour of dynamic fetch
 
 const tools = [
   { name: "VS Code", icon: "💻" },
@@ -46,7 +33,7 @@ function SkillProgressRing({
   index,
   isInView,
 }: {
-  skill: { name: string; level: number; color: string }
+  skill: { name: string; level: number; color: string; logo?: string }
   index: number
   isInView: boolean
 }) {
@@ -98,12 +85,22 @@ function SkillProgressRing({
             </linearGradient>
           </defs>
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {skill.logo && (
+            <motion.img
+              initial={{ scale: 0 }}
+              animate={isInView ? { scale: 1 } : {}}
+              transition={{ delay: 1 + index * 0.05 }}
+              src={skill.logo}
+              alt={`${skill.name} logo`}
+              className="h-8 w-8 object-contain mb-1 drop-shadow-md"
+            />
+          )}
           <motion.span
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 1 + index * 0.05 }}
-            className="text-xl font-bold text-foreground"
+            className={`font-bold text-foreground ${skill.logo ? 'text-sm' : 'text-xl'}`}
           >
             {skill.level}%
           </motion.span>
@@ -121,7 +118,7 @@ function SkillCard3D({
   index,
   isInView,
 }: {
-  skill: { name: string; level: number; color: string }
+  skill: { name: string; level: number; color: string; logo?: string }
   index: number
   isInView: boolean
 }) {
@@ -146,7 +143,10 @@ function SkillCard3D({
           className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-4 backdrop-blur-sm backface-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <div className="mb-2 text-2xl font-bold text-foreground">
+          {skill.logo && (
+            <img src={skill.logo} alt={skill.name} className="w-10 h-10 mb-2 drop-shadow-sm" />
+          )}
+          <div className={`font-bold text-foreground ${skill.logo ? 'text-lg mb-1' : 'text-2xl mb-2'}`}>
             {skill.name}
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
@@ -177,6 +177,16 @@ function SkillCard3D({
 export default function SkillsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [technicalSkills, setTechnicalSkills] = useState<any[]>([])
+  const [skillsLoading, setSkillsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setTechnicalSkills(data.data || data))
+      .catch(() => setTechnicalSkills([]))
+      .finally(() => setSkillsLoading(false))
+  }, [])
 
   return (
     <section
@@ -235,32 +245,47 @@ export default function SkillsSection() {
           </motion.div>
 
           <TabsContent value="technical" className="mt-0">
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              {technicalSkills.map((skill, index) => (
-                <SkillProgressRing
-                  key={skill.name}
-                  skill={skill}
-                  index={index}
-                  isInView={isInView}
-                />
-              ))}
-            </div>
-
-            <div className="mt-16">
-              <h3 className="mb-8 text-center font-heading text-xl font-semibold text-foreground">
-                Hover to see proficiency
-              </h3>
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {technicalSkills.slice(0, 8).map((skill, index) => (
-                  <SkillCard3D
-                    key={`card-${skill.name}`}
-                    skill={skill}
-                    index={index}
-                    isInView={isInView}
-                  />
+            {skillsLoading ? (
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-3 animate-pulse">
+                    <div className="h-28 w-28 rounded-full bg-muted/50" />
+                    <div className="h-3 w-20 rounded-full bg-muted/50" />
+                  </div>
                 ))}
               </div>
-            </div>
+            ) : technicalSkills.length === 0 ? (
+              <p className="text-center text-muted-foreground py-12">No skills added yet.</p>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {technicalSkills.map((skill, index) => (
+                    <SkillProgressRing
+                      key={skill._id || skill.name}
+                      skill={skill}
+                      index={index}
+                      isInView={isInView}
+                    />
+                  ))}
+                </div>
+
+                <div className="mt-16">
+                  <h3 className="mb-8 text-center font-heading text-xl font-semibold text-foreground">
+                    Hover to see proficiency
+                  </h3>
+                  <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    {technicalSkills.slice(0, 8).map((skill, index) => (
+                      <SkillCard3D
+                        key={`card-${skill._id || skill.name}`}
+                        skill={skill}
+                        index={index}
+                        isInView={isInView}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </TabsContent>
 
           <TabsContent value="tools" className="mt-0">
