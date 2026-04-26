@@ -1,6 +1,6 @@
 import type React from "react"
 import Link from "next/link"
-import { LayoutDashboard, FileText, LayoutGrid, MessageSquare, Cpu } from "lucide-react"
+import { LayoutDashboard, FileText, LayoutGrid, MessageSquare, Cpu, Wrench } from "lucide-react"
 
 export default function DashboardLayout({
   children,
@@ -44,6 +44,13 @@ export default function DashboardLayout({
           >
             <Cpu className="h-5 w-5" />
             Skills
+          </Link>
+          <Link
+            href="/rasel754/tools"
+            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-foreground transition-colors font-medium"
+          >
+            <Wrench className="h-5 w-5" />
+            Tools
           </Link>
           <Link
             href="/rasel754/messages"

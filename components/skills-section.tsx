@@ -4,18 +4,7 @@ import { useRef, useState, useEffect } from "react"
 import { motion, useInView } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Static fallback while API loads — removed in favour of dynamic fetch
-
-const tools = [
-  { name: "VS Code", icon: "💻" },
-  { name: "Git", icon: "📦" },
-  { name: "GitHub", icon: "🐙" },
-  { name: "Vercel", icon: "▲" },
-  { name: "Postman", icon: "📮" },
-  { name: "Figma", icon: "🎨" },
-  { name: "npm", icon: "📦" },
-  { name: "MongoDB Compass", icon: "🍃" },
-]
+// Tools will be fetched dynamically
 
 const softSkills = [
   "Problem Solving",
@@ -179,6 +168,8 @@ export default function SkillsSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [technicalSkills, setTechnicalSkills] = useState<any[]>([])
   const [skillsLoading, setSkillsLoading] = useState(true)
+  const [tools, setTools] = useState<any[]>([])
+  const [toolsLoading, setToolsLoading] = useState(true)
 
   useEffect(() => {
     fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
@@ -186,6 +177,12 @@ export default function SkillsSection() {
       .then((data) => setTechnicalSkills(data.data || data))
       .catch(() => setTechnicalSkills([]))
       .finally(() => setSkillsLoading(false))
+
+    fetch("http://localhost:5000/api/p4/tools", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setTools(data.data || data))
+      .catch(() => setTools([]))
+      .finally(() => setToolsLoading(false))
   }, [])
 
   return (
@@ -289,23 +286,36 @@ export default function SkillsSection() {
           </TabsContent>
 
           <TabsContent value="tools" className="mt-0">
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-              {tools.map((tool, index) => (
-                <motion.div
-                  key={tool.name}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="group flex flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/5"
-                >
-                  <span className="mb-3 text-4xl">{tool.icon}</span>
-                  <span className="text-sm font-medium text-foreground">
-                    {tool.name}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+            {toolsLoading ? (
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="group flex flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm animate-pulse">
+                    <div className="mb-3 h-10 w-10 rounded-full bg-muted/50" />
+                    <div className="h-3 w-16 rounded-full bg-muted/50" />
+                  </div>
+                ))}
+              </div>
+            ) : tools.length === 0 ? (
+              <p className="text-center text-muted-foreground py-12">No tools added yet.</p>
+            ) : (
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+                {tools.map((tool, index) => (
+                  <motion.div
+                    key={tool._id || tool.name}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className="group flex flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/5"
+                  >
+                    <span className="mb-3 text-4xl">{tool.icon}</span>
+                    <span className="text-sm font-medium text-foreground">
+                      {tool.name}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="soft" className="mt-0">

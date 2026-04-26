@@ -106,3 +106,36 @@ export async function deleteSkill(id: string) {
   if (!res.ok) throw new Error("Failed to delete skill")
   return res.json()
 }
+
+export async function fetchTools() {
+  const res = await fetch(`${BASE_URL}/tools`, { cache: "no-store" })
+  if (!res.ok) throw new Error("Failed to fetch tools")
+  const data = await res.json()
+  return data.data || data
+}
+
+export async function createTool(tool: any) {
+  const res = await fetch(`${BASE_URL}/tools/create-tool`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tool),
+  })
+  if (!res.ok) throw new Error("Failed to create tool")
+  return res.json()
+}
+
+export async function updateTool(id: string, tool: any) {
+  const res = await fetch(`${BASE_URL}/tools/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tool),
+  })
+  if (!res.ok) throw new Error("Failed to update tool")
+  return res.json()
+}
+
+export async function deleteTool(id: string) {
+  const res = await fetch(`${BASE_URL}/tools/${id}`, { method: "DELETE" })
+  if (!res.ok) throw new Error("Failed to delete tool")
+  return res.json()
+}
