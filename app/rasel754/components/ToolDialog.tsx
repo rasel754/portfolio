@@ -91,16 +91,16 @@ export function ToolDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Icon <span className="text-muted-foreground text-xs">(emoji or character)</span></Label>
+            <Label>Icon <span className="text-muted-foreground text-xs">(image URL)</span></Label>
             <Input
               required
-              placeholder="e.g. 💻"
+              placeholder="e.g. https://cdn.jsdelivr.net/gh/devicons/..."
               value={formData.icon}
               onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
             />
             {formData.icon && (
               <div className="flex items-center gap-2 rounded-md border border-border/50 bg-muted/30 p-2">
-                <span className="text-2xl">{formData.icon}</span>
+                <img src={formData.icon} alt="Icon preview" className="h-8 w-8 object-contain" />
                 <span className="text-xs text-muted-foreground">Icon preview</span>
               </div>
             )}

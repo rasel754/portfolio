@@ -91,7 +91,7 @@ export default function ToolsPage() {
               tools.map((tool) => (
                 <TableRow key={tool._id}>
                   <TableCell>
-                    <span className="text-2xl">{tool.icon}</span>
+                    <img src={tool.icon} alt={`${tool.name} icon`} className="h-8 w-8 object-contain" />
                   </TableCell>
                   <TableCell className="font-medium">{tool.name}</TableCell>
                   <TableCell className="text-right space-x-2">

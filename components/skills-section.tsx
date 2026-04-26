@@ -308,7 +308,7 @@ export default function SkillsSection() {
                     whileHover={{ scale: 1.05, y: -5 }}
                     className="group flex flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/5"
                   >
-                    <span className="mb-3 text-4xl">{tool.icon}</span>
+                    <img src={tool.icon} alt={`${tool.name} icon`} className="mb-3 h-10 w-10 object-contain drop-shadow-sm" />
                     <span className="text-sm font-medium text-foreground">
                       {tool.name}
                     </span>
