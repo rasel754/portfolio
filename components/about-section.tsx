@@ -67,7 +67,7 @@ export default function AboutSection() {
               <div className="relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm">
                 <div className="aspect-[4/5] relative">
                   <Image
-                    src="https://i.ibb.co.com/fYgWxy10/my-pic.jpg"
+                    src="https://i.ibb.co.com/RTRgvtXK/1710414204719.jpg"
                     alt="Rasel Ahmed"
                     fill
                     className="object-cover"
