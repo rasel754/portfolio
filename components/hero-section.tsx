@@ -7,6 +7,18 @@ import { ArrowDown, Github, Linkedin, Mail, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import dynamic from "next/dynamic"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 const Scene3D = dynamic(() => import("@/components/scene-3d"), {
   ssr: false,
   loading: () => (
@@ -109,12 +121,41 @@ function AnimatedCounter({
 }
 
 export default function HeroSection() {
+  const [projectsCount, setProjectsCount] = useState(3)
+  const [skillsCount, setSkillsCount] = useState(6)
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/p4/projects", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data) {
+          setProjectsCount(data.data.length)
+        }
+      })
+      .catch(console.error)
+
+    fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data) {
+          setSkillsCount(data.data.length)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   const handleScrollToProjects = () => {
     document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleScrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+  const handleDownloadResume = () => {
+    const link = document.createElement("a")
+    link.href =
+      "https://docs.google.com/document/d/119FT8Ga4h_xQZgGpjF7XOT-lxHMMGZzJ/export?format=pdf"
+    link.download = "Rasel_Ahmed_Resume.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   return (
@@ -216,17 +257,34 @@ export default function HeroSection() {
               </span>
             </Button>
 
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={handleScrollToContact}
-              className="group border-primary/50 hover:bg-primary/10"
-            >
-              <span className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                Download Resume
-              </span>
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="group border-primary/50 hover:bg-primary/10"
+                >
+                  <span className="flex items-center gap-2">
+                    <Download className="h-4 w-4" />
+                    Download Resume
+                  </span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Download Resume</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to download Rasel Ahmed's resume as a PDF file?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDownloadResume}>
+                    Download
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </motion.div>
 
           <motion.div
@@ -269,9 +327,9 @@ export default function HeroSection() {
             className="mt-16 grid grid-cols-3 gap-8 md:gap-16"
           >
             {[
-              { value: 3, suffix: "+", label: "Projects Built" },
+              { value: projectsCount, suffix: "+", label: "Projects Built" },
               { value: 1.5, suffix: "+", label: "Years Training" },
-              { value: 6, suffix: "+", label: "Technologies" },
+              { value: skillsCount, suffix: "+", label: "Technologies" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}

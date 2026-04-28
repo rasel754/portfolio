@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import { MapPin, Calendar, GraduationCap, Code2 } from "lucide-react"
@@ -31,6 +31,28 @@ const highlights = [
 export default function AboutSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [projectsCount, setProjectsCount] = useState<number | string>("3+")
+  const [skillsCount, setSkillsCount] = useState<number | string>("6+")
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/p4/projects", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data) {
+          setProjectsCount(data.data.length)
+        }
+      })
+      .catch(console.error)
+
+    fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data) {
+          setSkillsCount(data.data.length)
+        }
+      })
+      .catch(console.error)
+  }, [])
 
   return (
     <section
@@ -167,9 +189,9 @@ export default function AboutSection() {
 
             <div className="grid grid-cols-2 gap-4 pt-4 sm:grid-cols-4">
               {[
-                { value: "3+", label: "Projects" },
+                { value: `${projectsCount}+`, label: "Projects" },
                 { value: "1.5+", label: "Years" },
-                { value: "6+", label: "Technologies" },
+                { value: `${skillsCount}+`, label: "Technologies" },
                 { value: "100%", label: "Dedication" },
               ].map((stat, index) => (
                 <motion.div
