@@ -1,12 +1,36 @@
+"use client"
 import type React from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { LayoutDashboard, FileText, LayoutGrid, MessageSquare, Cpu, Wrench } from "lucide-react"
+import { LayoutDashboard, FileText, LayoutGrid, MessageSquare, Cpu, Wrench, LogOut } from "lucide-react"
+import { LoginForm } from "./components/LoginForm"
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      setIsLoggedIn(true)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn")
+    setIsLoggedIn(false)
+  }
+
+  if (!mounted) return null;
+
+  if (!isLoggedIn) {
+    return <LoginForm onLogin={() => setIsLoggedIn(true)} />
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -60,6 +84,15 @@ export default function DashboardLayout({
             Messages
           </Link>
         </nav>
+        <div className="p-4 border-t">
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 px-3 py-2 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors font-medium"
+          >
+            <LogOut className="h-5 w-5" />
+            Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
