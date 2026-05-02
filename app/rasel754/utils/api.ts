@@ -1,5 +1,5 @@
 // API utilities for dashboard
-const BASE_URL = "http://localhost:5000/api/p4"
+const BASE_URL = "https://portfolio-server-blush-one.vercel.app/api/p4"
 
 export async function fetchProjects() {
   const res = await fetch(`${BASE_URL}/projects`, { cache: "no-store" })

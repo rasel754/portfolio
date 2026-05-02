@@ -9,7 +9,7 @@ export default function BlogPageClient() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/p4/blogs")
+        const res = await fetch("https://portfolio-server-blush-one.vercel.app/api/p4/blogs")
         const data = await res.json()
         if (data.success) {
           setBlogsList(data.data.map((b: any) => ({ ...b, id: b._id })))

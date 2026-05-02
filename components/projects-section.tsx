@@ -202,7 +202,7 @@ export default function ProjectsSection() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/p4/projects")
+        const res = await fetch("https://portfolio-server-blush-one.vercel.app/api/p4/projects")
         const data = await res.json()
         if (data.success) {
           setProjectsList(data.data.slice(0, 3).map((p: any) => ({ ...p, id: p._id })))

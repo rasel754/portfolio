@@ -6,7 +6,7 @@ import { ArrowLeft, Github, ExternalLink } from "lucide-react"
 
 async function getProject(id: string) {
   try {
-    const res = await fetch(`http://localhost:5000/api/p4/projects/${id}`, { cache: "no-store" })
+    const res = await fetch(`https://portfolio-server-blush-one.vercel.app/api/p4/projects/${id}`, { cache: "no-store" })
     if (!res.ok) return null
     const json = await res.json()
     if (json.success) return { ...json.data, id: json.data._id }

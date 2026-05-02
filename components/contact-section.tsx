@@ -73,7 +73,7 @@ export default function ContactSection() {
     setResponseMessage("")
 
     try {
-      const res = await fetch("http://localhost:5000/api/p4/sendMessage", {
+      const res = await fetch("https://portfolio-server-blush-one.vercel.app/api/p4/sendMessage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

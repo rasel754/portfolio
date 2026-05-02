@@ -25,7 +25,7 @@ This project leverages a modern React ecosystem focused on performance, accessib
 
 ## 🔗 API Integration
 The frontend is designed to communicate seamlessly with a dedicated Node.js/Express backend via REST API.
-- **Base URL (Local):** `http://localhost:5000/api/p4` (Configurable via Environment Variables)
+- **Base URL (Local):** `https://portfolio-server-blush-one.vercel.app/api/p4` (Configurable via Environment Variables)
 - **Architecture:** Client components fetch data for public display (Projects, Blogs, Skills), while the admin dashboard interacts with protected routes for creating, updating, and deleting content.
 
 ## 📂 Project Structure
@@ -60,7 +60,7 @@ The frontend is designed to communicate seamlessly with a dedicated Node.js/Expr
 Create a `.env.local` file in the root directory and add the following:
 ```env
 # Example Environment Variables
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/p4
+NEXT_PUBLIC_API_URL=https://portfolio-server-blush-one.vercel.app/api/p4
 ```
 
 ### Run the Project

@@ -172,13 +172,13 @@ export default function SkillsSection() {
   const [toolsLoading, setToolsLoading] = useState(true)
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
+    fetch("https://portfolio-server-blush-one.vercel.app/api/p4/skills", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setTechnicalSkills(data.data || data))
       .catch(() => setTechnicalSkills([]))
       .finally(() => setSkillsLoading(false))
 
-    fetch("http://localhost:5000/api/p4/tools", { cache: "no-store" })
+    fetch("https://portfolio-server-blush-one.vercel.app/api/p4/tools", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setTools(data.data || data))
       .catch(() => setTools([]))

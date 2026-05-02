@@ -125,7 +125,7 @@ export default function HeroSection() {
   const [skillsCount, setSkillsCount] = useState(6)
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/p4/projects", { cache: "no-store" })
+    fetch("https://portfolio-server-blush-one.vercel.app/api/p4/projects", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => {
         if (data.data) {
@@ -134,7 +134,7 @@ export default function HeroSection() {
       })
       .catch(console.error)
 
-    fetch("http://localhost:5000/api/p4/skills", { cache: "no-store" })
+    fetch("https://portfolio-server-blush-one.vercel.app/api/p4/skills", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => {
         if (data.data) {
