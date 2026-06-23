@@ -1,202 +1,45 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
-import Image from "next/image"
-import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { ExternalLink, Github, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import { Project } from "./project-card"
+import { useEffect, useState } from "react"
+import Link from "next/image"
+import NextLink from "next/link"
+import { ArrowRight } from "lucide-react"
+import ProjectCard, { Project } from "./project-card"
+import SectionHeader from "@/components/ui/SectionHeader"
+import Reveal from "@/components/ui/Reveal"
 
-function ProjectCard({
-  project,
-  index,
-  isInView,
-}: {
-  project: Project
-  index: number
-  isInView: boolean
-}) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  const mouseXSpring = useSpring(x, { stiffness: 500, damping: 100 })
-  const mouseYSpring = useSpring(y, { stiffness: 500, damping: 100 })
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"])
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-
-    const rect = cardRef.current.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
-
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-
-    const xPct = mouseX / width - 0.5
-    const yPct = mouseY / height - 0.5
-
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0)
-    y.set(0)
-    setIsHovered(false)
-  }
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX: isHovered ? rotateX : 0,
-        rotateY: isHovered ? rotateY : 0,
-        transformStyle: "preserve-3d",
-      }}
-      className="group relative"
-    >
-      <div
-        className={`absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-primary via-secondary to-accent opacity-0 blur transition-opacity duration-500 ${
-          isHovered ? "opacity-75" : ""
-        }`}
-      />
-
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-card/80 backdrop-blur-sm">
-        <div className="relative aspect-video overflow-hidden">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            className={`object-cover transition-all duration-700 ${
-              isHovered ? "scale-110 blur-0" : "scale-100"
-            }`}
-          />
-          <div
-            className={`absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent transition-opacity duration-500 ${
-              isHovered ? "opacity-90" : "opacity-70"
-            }`}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 flex items-center justify-center gap-4"
-          >
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-background/90 text-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:scale-110"
-              aria-label={`View ${project.title} on GitHub`}
-            >
-              <Github className="h-5 w-5" />
-            </a>
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-background/90 text-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:scale-110"
-              aria-label={`View live demo of ${project.title}`}
-            >
-              <ExternalLink className="h-5 w-5" />
-            </a>
-          </motion.div>
-        </div>
-
-        <div className="p-6" style={{ transform: "translateZ(50px)" }}>
-          <h3 className="mb-2 font-heading text-xl font-semibold text-foreground line-clamp-1">
-            {project.title}
-          </h3>
-          <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-            {project.description}
-          </p>
-
-          <div className="mb-4 flex flex-wrap gap-2">
-            {project.technologies?.slice(0, 4).map((tech: string) => (
-              <Badge
-                key={tech}
-                variant="secondary"
-                className="bg-primary/10 text-primary hover:bg-primary/20"
-              >
-                {tech}
-              </Badge>
-            ))}
-            {project.technologies && project.technologies.length > 4 && (
-              <Badge variant="outline" className="text-muted-foreground">
-                +{project.technologies.length - 4}
-              </Badge>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="h-8 text-muted-foreground hover:text-primary"
-              >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="mr-1 h-4 w-4" />
-                  Code
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="h-8 text-muted-foreground hover:text-primary"
-              >
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="mr-1 h-4 w-4" />
-                  Demo
-                </a>
-              </Button>
-            </div>
-            <Link href={`/projects/${project.id}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-primary hover:bg-primary/10"
-              >
-                Details
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
+const fallbackProjects: Project[] = [
+  {
+    id: "p3",
+    title: "NextMart",
+    description: "A full-stack multi-vendor e-commerce marketplace with role-based dashboards for Admin, Vendor, and Customer. Built with Next.js 15, TypeScript, and MongoDB.",
+    technologies: ["Next.js 15", "TypeScript", "MongoDB", "Tailwind CSS"],
+    image: "https://i.ibb.co.com/JR7Ysr05/Screensh7ot.png",
+    liveUrl: "https://next-mart-client-sable.vercel.app/",
+    github: "https://github.com/rasel754/NextMart-Client",
+  },
+  {
+    id: "p2",
+    title: "AdolBodol",
+    description: "A team marketplace platform where users can browse, post, and exchange services. Full MERN stack with JWT auth and real-time features.",
+    technologies: ["React.js", "Node.js", "Express.js", "MongoDB"],
+    image: "https://i.ibb.co.com/cK8nxcTW/Screenssshot.png",
+    liveUrl: "https://adol-bodon-frontend.vercel.app/",
+    github: "https://github.com/Mahmudul107/adolBodol-frontend",
+  },
+  {
+    id: "p1",
+    title: "Script & Scroll",
+    description: "A full-featured e-commerce web app with product listings, cart management, user authentication, and an admin dashboard.",
+    technologies: ["React", "Node.js", "MongoDB", "Redux", "Tailwind CSS"],
+    image: "https://i.ibb.co.com/hR3t0ZxF/Screenshot.png",
+    liveUrl: "https://assignment-four-client-ashy.vercel.app/",
+    github: "https://github.com/rasel754/assignment-four-client",
+  },
+]
 
 export default function ProjectsSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [projectsList, setProjectsList] = useState<any[]>([])
+  const [projectsList, setProjectsList] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -204,11 +47,25 @@ export default function ProjectsSection() {
       try {
         const res = await fetch("https://portfolio-server-blush-one.vercel.app/api/p4/projects")
         const data = await res.json()
-        if (data.success) {
-          setProjectsList(data.data.slice(0, 3).map((p: any) => ({ ...p, id: p._id })))
+        if (data.success && data.data && data.data.length > 0) {
+          const apiList = data.data.map((p: any) => ({
+            id: p._id,
+            title: p.title,
+            description: p.description,
+            image: p.image,
+            technologies: p.technologies || [],
+            github: p.github,
+            liveUrl: p.liveUrl,
+            content: p.content,
+            features: p.features,
+          }))
+          setProjectsList(apiList.slice(0, 3))
+        } else {
+          setProjectsList(fallbackProjects)
         }
       } catch (error) {
-        console.error(error)
+        console.error("API error loading projects, falling back:", error)
+        setProjectsList(fallbackProjects)
       } finally {
         setIsLoading(false)
       }
@@ -217,68 +74,48 @@ export default function ProjectsSection() {
   }, [])
 
   return (
-    <section
-      id="projects"
-      ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
-    >
-      <div className="absolute inset-0 dot-pattern opacity-30" />
+    <section id="projects" className="relative py-24 md:py-32 overflow-hidden max-w-6xl mx-auto px-6 md:px-8">
+      {/* Background Dot pattern overlay */}
+      <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-primary">
-            Featured Work
-          </span>
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            My Projects
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            A selection of projects that showcase my skills in building modern,
-            scalable web applications with the MERN stack and beyond.
-          </p>
-        </motion.div>
+      <Reveal>
+        <SectionHeader tagline="featured_work" title="My Projects" />
+      </Reveal>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {isLoading ? (
-            <div className="col-span-full py-12 text-center text-muted-foreground">Loading projects...</div>
-          ) : projectsList.length > 0 ? (
-            projectsList.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-                isInView={isInView}
-              />
-            ))
-          ) : (
-            <div className="col-span-full py-12 text-center text-muted-foreground">No projects found.</div>
-          )}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <Button
-            size="lg"
-            variant="outline"
-            asChild
-            className="group border-primary/50 hover:bg-primary/10"
-          >
-            <Link href="/projects">
-              View All Projects
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-surface border border-border-subtle rounded-2xl h-96 animate-pulse flex flex-col p-6 space-y-4"
+            >
+              <div className="bg-elevated h-48 w-full rounded-xl" />
+              <div className="bg-elevated h-6 w-3/4 rounded-full" />
+              <div className="bg-elevated h-4 w-1/2 rounded-full" />
+            </div>
+          ))
+        ) : projectsList.length > 0 ? (
+          projectsList.map((project, index) => (
+            <Reveal key={project.id} delay={index * 0.1}>
+              <ProjectCard project={project} />
+            </Reveal>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12 text-[#8b8ba7]">No projects found.</div>
+        )}
       </div>
+
+      <Reveal delay={0.4}>
+        <div className="mt-16 text-center">
+          <NextLink
+            href="/projects"
+            className="inline-flex items-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 rounded-xl px-6 py-3 font-semibold transition-all hover:scale-105 duration-300"
+          >
+            View All Projects
+            <ArrowRight className="w-4 h-4" />
+          </NextLink>
+        </div>
+      </Reveal>
     </section>
   )
 }

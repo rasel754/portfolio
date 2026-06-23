@@ -1,26 +1,11 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google"
+import { spaceGrotesk, syne, jetbrainsMono } from "@/lib/fonts"
 import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
-import CustomCursor from "@/components/custom-cursor"
-
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-})
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-})
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-})
+import CursorGlow from "@/components/ui/CursorGlow"
 
 export const metadata: Metadata = {
   title: "Rasel Ahmed | MERN Stack Developer",
@@ -63,8 +48,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0f" },
+    { media: "(prefers-color-scheme: light)", color: "#050508" },
+    { media: "(prefers-color-scheme: dark)", color: "#050508" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -79,19 +64,36 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} bg-background`}
+      className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body className="font-body antialiased relative min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <CustomCursor />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          {/* Global Space Control Room Background Gradients */}
+          <div
+            className="pointer-events-none fixed inset-0 z-0 bg-void"
+            style={{
+              background: `
+                radial-gradient(ellipse at 20% 50%, rgba(108,99,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 10%, rgba(167,139,250,0.05) 0%, transparent 50%)
+              `,
+            }}
+          />
+          {/* CSS Starfield overlay */}
+          <div className="starfield" />
+
+          {/* Mouse follow glow */}
+          <CursorGlow />
+
+          <div className="relative z-10 flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

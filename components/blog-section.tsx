@@ -1,92 +1,93 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
-import { motion, useInView } from "framer-motion"
-import { Calendar, Clock, ArrowRight, ExternalLink } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { motion } from "framer-motion"
+import { Calendar, Clock, ArrowRight } from "lucide-react"
+import SectionHeader from "@/components/ui/SectionHeader"
+import Reveal from "@/components/ui/Reveal"
+import NextLink from "next/link"
 
-function BlogCard({
-  post,
-  index,
-  isInView,
-}: {
-  post: any
-  index: number
-  isInView: boolean
-}) {
+const staticBlogs = [
+  {
+    id: "b1",
+    title: "Why Choose the MERN Stack for Your Next Web Project?",
+    excerpt: "The MERN stack is a popular web development framework that combines four powerful technologies: MongoDB, Express.js, React, and Node.js. Each component plays a crucial role in building dynamic web applications.",
+    image: "https://i.ibb.co.com/1B0yMKQ/White-Blue-Illustration-Business-Blog-Banner.png",
+    date: "June 3, 2026",
+    readTime: "10 min read",
+    url: "https://dly.to/OveKzgglTH0",
+    tags: ["MERN Stack", "Web Development", "JavaScript"],
+  },
+  {
+    id: "b2",
+    title: "Building Modern Web Apps: TypeScript and Next.js Together",
+    excerpt: "Among the many options available, TypeScript and Next.js have emerged as powerful allies for developers looking to build modern web applications. This post will explore how these two technologies work together.",
+    image: "https://i.ibb.co.com/L4PbdGx/image-1.jpg",
+    date: "May 15, 2026",
+    readTime: "8 min read",
+    url: "https://docs.google.com/document/d/1rQjCpuqu9qb-xu70qOeL7UJqW-HpjHNVmofSU5mmgO8/edit?usp=sharing",
+    tags: ["TypeScript", "Next.js", "MERN Stack"],
+  },
+]
+
+function BlogCard({ post, index }: { post: any; index: number }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80"
-    >
-      <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-3xl transition-all group-hover:scale-150" />
-
-      <div className="relative aspect-video overflow-hidden">
+    <article className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface hover:border-accent/40 hover:shadow-glow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden shrink-0">
         <Image
-          src={post.image}
+          src={post.image || "/placeholder.svg"}
           alt={post.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              {post.date}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {post.readTime}
-            </span>
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3 text-xs text-[#8b8ba7] font-mono">
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3 text-accent" />
+            {post.date}
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3 text-gold" />
+            {post.readTime}
+          </span>
         </div>
       </div>
-
-      <div className="relative p-6">
+      {/* Content */}
+      <div className="p-6 flex flex-col flex-grow">
         <div className="mb-3 flex flex-wrap gap-2">
-          {post.tags?.map((tag: string) => (
-            <Badge
+          {post.tags?.slice(0, 3).map((tag: string) => (
+            <span
               key={tag}
-              variant="secondary"
-              className="bg-primary/10 text-primary text-xs hover:bg-primary/20"
+              className="font-mono text-[10px] bg-accent/10 text-accent border border-accent/20 rounded-full px-2.5 py-0.5"
             >
               {tag}
-            </Badge>
+            </span>
           ))}
         </div>
-
-        <h3 className="mb-3 font-heading text-xl font-semibold text-foreground line-clamp-2 transition-colors group-hover:text-primary">
+        <h3 className="mb-3 font-display text-lg font-bold text-[#f0f0ff] line-clamp-2 group-hover:text-accent transition-colors">
           {post.title}
         </h3>
-
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
+        <p className="text-[#8b8ba7] text-sm leading-relaxed line-clamp-3 mb-6">
           {post.excerpt}
         </p>
-
-        <a
-          href={post.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-all hover:gap-3"
-        >
-          Read Article
-          <ArrowRight className="h-4 w-4" />
-        </a>
+        <div className="mt-auto">
+          <a
+            href={post.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-accent text-sm font-semibold hover:gap-3 transition-all duration-300"
+          >
+            Read Article <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
 export default function BlogSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [blogsList, setBlogsList] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -95,11 +96,14 @@ export default function BlogSection() {
       try {
         const res = await fetch("https://portfolio-server-blush-one.vercel.app/api/p4/blogs")
         const data = await res.json()
-        if (data.success) {
+        if (data.success && data.data && data.data.length > 0) {
           setBlogsList(data.data.slice(0, 3).map((b: any) => ({ ...b, id: b._id })))
+        } else {
+          setBlogsList(staticBlogs)
         }
       } catch (error) {
-        console.error(error)
+        console.error("Failed to load blogs from API, using static posts:", error)
+        setBlogsList(staticBlogs)
       } finally {
         setIsLoading(false)
       }
@@ -108,68 +112,48 @@ export default function BlogSection() {
   }, [])
 
   return (
-    <section
-      id="blog"
-      ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
-    >
-      <div className="absolute inset-0 dot-pattern opacity-30" />
+    <section id="blog" className="relative py-24 md:py-32 overflow-hidden max-w-6xl mx-auto px-6 md:px-8">
+      {/* Background Dot pattern */}
+      <div className="absolute inset-0 dot-pattern opacity-20 pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-primary">
-            Latest Articles
-          </span>
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            From My Blog
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            I write about web development, programming tips, and my experiences
-            as a developer. Here are some of my recent articles.
-          </p>
-        </motion.div>
+      <Reveal>
+        <SectionHeader tagline="latest_articles" title="From My Blog" />
+      </Reveal>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {isLoading ? (
-            <div className="col-span-full py-12 text-center text-muted-foreground">Loading blogs...</div>
-          ) : blogsList.length > 0 ? (
-            blogsList.map((post, index) => (
-              <BlogCard
-                key={post.id}
-                post={post}
-                index={index}
-                isInView={isInView}
-              />
-            ))
-          ) : (
-            <div className="col-span-full py-12 text-center text-muted-foreground">No blogs found.</div>
-          )}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <Button
-            size="lg"
-            variant="outline"
-            asChild
-            className="group border-primary/50 hover:bg-primary/10"
-          >
-            <Link href="/blog">
-              View All Articles
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-surface border border-border-subtle rounded-2xl h-80 animate-pulse flex flex-col p-6 space-y-4"
+            >
+              <div className="bg-elevated h-36 w-full rounded-xl" />
+              <div className="bg-elevated h-6 w-3/4 rounded-full" />
+              <div className="bg-elevated h-4 w-1/2 rounded-full" />
+            </div>
+          ))
+        ) : blogsList.length > 0 ? (
+          blogsList.map((post, index) => (
+            <Reveal key={post.id} delay={index * 0.1}>
+              <BlogCard post={post} index={index} />
+            </Reveal>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12 text-[#8b8ba7]">No blogs found.</div>
+        )}
       </div>
+
+      <Reveal delay={0.4}>
+        <div className="mt-16 text-center">
+          <NextLink
+            href="/blog"
+            className="inline-flex items-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 rounded-xl px-6 py-3 font-semibold transition-all hover:scale-105 duration-300"
+          >
+            View All Articles
+            <ArrowRight className="w-4 h-4" />
+          </NextLink>
+        </div>
+      </Reveal>
     </section>
   )
 }

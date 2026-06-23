@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
 import { GraduationCap, BookOpen, Calendar, MapPin } from "lucide-react"
+import SectionHeader from "@/components/ui/SectionHeader"
+import Reveal from "@/components/ui/Reveal"
 
-const education = [
+const educationData = [
   {
     id: 1,
     title: "BSc in Computer Science",
@@ -13,7 +13,6 @@ const education = [
     period: "2022 - Present",
     description:
       "Currently pursuing a Bachelor's degree in Computer Science, focusing on software engineering, algorithms, and web technologies.",
-    icon: GraduationCap,
     type: "education",
   },
   {
@@ -24,7 +23,6 @@ const education = [
     period: "2024 - Present",
     description:
       "Intensive 1.5-year program covering the complete MERN stack, including React, Node.js, Express, MongoDB, TypeScript, and modern development practices.",
-    icon: BookOpen,
     type: "training",
   },
   {
@@ -35,182 +33,128 @@ const education = [
     period: "2019 - 2021",
     description:
       "Completed higher secondary education with a focus on science subjects, building a strong foundation in mathematics and physics.",
-    icon: GraduationCap,
     type: "education",
   },
 ]
 
-function TimelineItem({
-  item,
-  index,
-  isInView,
-  isLast,
-}: {
-  item: (typeof education)[0]
-  index: number
-  isInView: boolean
-  isLast: boolean
-}) {
-  const isLeft = index % 2 === 0
-
-  return (
-    <div className="relative flex items-center justify-center">
-      <div
-        className={`hidden w-full md:flex ${isLeft ? "justify-end pr-8 lg:pr-16" : "justify-start pl-8 lg:pl-16"} md:w-1/2`}
-      >
-        {isLeft && (
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: index * 0.2, duration: 0.5 }}
-            className="w-full max-w-md"
-          >
-            <TimelineCard item={item} />
-          </motion.div>
-        )}
-      </div>
-
-      <div className="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={isInView ? { scale: 1 } : {}}
-          transition={{ delay: index * 0.2, type: "spring", stiffness: 200 }}
-          className="relative"
-        >
-          <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary to-secondary opacity-50 blur-md animate-pulse" />
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-4 border-background bg-gradient-to-br from-primary to-secondary shadow-lg">
-            <item.icon className="h-6 w-6 text-primary-foreground" />
-          </div>
-        </motion.div>
-        {!isLast && (
-          <motion.div
-            initial={{ height: 0 }}
-            animate={isInView ? { height: "100%" } : {}}
-            transition={{ delay: index * 0.2 + 0.3, duration: 0.5 }}
-            className="w-0.5 bg-gradient-to-b from-primary/50 to-secondary/50"
-            style={{ minHeight: "120px" }}
-          />
-        )}
-      </div>
-
-      <div
-        className={`hidden w-full md:flex ${!isLeft ? "justify-end pr-8 lg:pr-16" : "justify-start pl-8 lg:pl-16"} md:w-1/2`}
-      >
-        {!isLeft && (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: index * 0.2, duration: 0.5 }}
-            className="w-full max-w-md"
-          >
-            <TimelineCard item={item} />
-          </motion.div>
-        )}
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: index * 0.2, duration: 0.5 }}
-        className="ml-20 w-full md:hidden"
-      >
-        <TimelineCard item={item} />
-      </motion.div>
-    </div>
-  )
-}
-
-function TimelineCard({ item }: { item: (typeof education)[0] }) {
-  return (
-    <div className="group relative overflow-hidden rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80">
-      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-2xl transition-all group-hover:scale-150" />
-
-      <div className="relative">
-        <div className="mb-3 flex items-center gap-2">
-          <span
-            className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${
-              item.type === "training"
-                ? "bg-accent/10 text-accent"
-                : "bg-primary/10 text-primary"
-            }`}
-          >
-            {item.type === "training" ? "Training" : "Education"}
-          </span>
-        </div>
-
-        <h3 className="mb-2 font-heading text-xl font-semibold text-foreground">
-          {item.title}
-        </h3>
-
-        <p className="mb-3 text-lg font-medium text-primary">
-          {item.institution}
-        </p>
-
-        <div className="mb-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            {item.period}
-          </span>
-          <span className="flex items-center gap-1">
-            <MapPin className="h-4 w-4" />
-            {item.location}
-          </span>
-        </div>
-
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {item.description}
-        </p>
-      </div>
-    </div>
-  )
-}
-
 export default function EducationSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-
   return (
-    <section
-      id="education"
-      ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
-    >
-      <div className="absolute inset-0 grid-pattern opacity-20" />
+    <section id="education" className="relative py-24 md:py-32 overflow-hidden max-w-6xl mx-auto px-6 md:px-8">
+      {/* Background Dot pattern overlay */}
+      <div className="absolute inset-0 dot-pattern opacity-20 pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-primary">
-            My Journey
-          </span>
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            Education & Training
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            My educational background and professional training that shaped my
-            skills as a developer.
-          </p>
-        </motion.div>
+      <Reveal>
+        <SectionHeader tagline="education_and_training" title="My Academic Journey" />
+      </Reveal>
 
-        <div className="relative">
-          <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-primary/20 via-secondary/20 to-accent/20 md:block" />
-          <div className="absolute left-7 top-0 h-full w-0.5 bg-gradient-to-b from-primary/20 via-secondary/20 to-accent/20 md:hidden" />
+      {/* Timeline wrapper */}
+      <div className="relative mt-16">
+        {/* Center vertical line */}
+        <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-accent to-transparent -translate-x-1/2" />
 
-          <div className="space-y-12 md:space-y-0">
-            {education.map((item, index) => (
-              <TimelineItem
+        <div className="space-y-12">
+          {educationData.map((item, index) => {
+            const isLeft = index % 2 === 0
+            return (
+              <div
                 key={item.id}
-                item={item}
-                index={index}
-                isInView={isInView}
-                isLast={index === education.length - 1}
-              />
-            ))}
-          </div>
+                className="relative flex flex-col md:flex-row items-start md:items-center justify-between"
+              >
+                {/* Desktop Left Side Card */}
+                <div className={`hidden md:flex w-1/2 ${isLeft ? "justify-end pr-12" : "justify-start pl-12 invisible"}`}>
+                  {isLeft && (
+                    <Reveal delay={0.1 * index}>
+                      <div className="bg-surface border border-border-subtle rounded-2xl p-6 max-w-md hover:border-accent/30 transition-colors duration-300">
+                        <span className="font-mono text-xs bg-accent/10 text-accent rounded-full px-3 py-1 uppercase tracking-wide inline-block mb-3">
+                          {item.type === "training" ? "Training" : "Education"}
+                        </span>
+                        <h3 className="font-display text-xl font-bold text-[#f0f0ff] mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-accent font-semibold text-sm mb-2">
+                          {item.institution}
+                        </p>
+                        <div className="flex gap-4 text-xs font-mono text-[#4a4a6a] mb-4">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" /> {item.period}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5" /> {item.location}
+                          </span>
+                        </div>
+                        <p className="text-[#8b8ba7] text-sm leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </Reveal>
+                  )}
+                </div>
+
+                {/* Timeline Dot */}
+                <div className="absolute left-4 md:left-1/2 z-10 -translate-x-1/2">
+                  <div className="w-4 h-4 rounded-full bg-accent shadow-glow-sm border-2 border-void" />
+                </div>
+
+                {/* Desktop Right Side Card */}
+                <div className={`hidden md:flex w-1/2 ${!isLeft ? "justify-start pl-12" : "justify-end pr-12 invisible"}`}>
+                  {!isLeft && (
+                    <Reveal delay={0.1 * index}>
+                      <div className="bg-surface border border-border-subtle rounded-2xl p-6 max-w-md hover:border-accent/30 transition-colors duration-300">
+                        <span className="font-mono text-xs bg-accent/10 text-accent rounded-full px-3 py-1 uppercase tracking-wide inline-block mb-3">
+                          {item.type === "training" ? "Training" : "Education"}
+                        </span>
+                        <h3 className="font-display text-xl font-bold text-[#f0f0ff] mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-accent font-semibold text-sm mb-2">
+                          {item.institution}
+                        </p>
+                        <div className="flex gap-4 text-xs font-mono text-[#4a4a6a] mb-4">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" /> {item.period}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5" /> {item.location}
+                          </span>
+                        </div>
+                        <p className="text-[#8b8ba7] text-sm leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </Reveal>
+                  )}
+                </div>
+
+                {/* Mobile Card (Visible on mobile only, stacks to the right of line) */}
+                <div className="md:hidden pl-10 w-full">
+                  <Reveal delay={0.1 * index}>
+                    <div className="bg-surface border border-border-subtle rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300">
+                      <span className="font-mono text-xs bg-accent/10 text-accent rounded-full px-3 py-1 uppercase tracking-wide inline-block mb-3">
+                        {item.type === "training" ? "Training" : "Education"}
+                      </span>
+                      <h3 className="font-display text-xl font-bold text-[#f0f0ff] mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-accent font-semibold text-sm mb-2">
+                        {item.institution}
+                      </p>
+                      <div className="flex flex-wrap gap-4 text-xs font-mono text-[#4a4a6a] mb-4">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3.5 h-3.5" /> {item.period}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5" /> {item.location}
+                        </span>
+                      </div>
+                      <p className="text-[#8b8ba7] text-sm leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+                  </Reveal>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

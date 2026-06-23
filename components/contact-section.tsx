@@ -1,22 +1,12 @@
 "use client"
 
-import { useRef, useState } from "react"
-import { motion, useInView } from "framer-motion"
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Github,
-  Linkedin,
-  Send,
-  CheckCircle,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { Mail, Phone, MapPin, CheckCircle, AlertCircle } from "lucide-react"
+import SectionHeader from "@/components/ui/SectionHeader"
+import Reveal from "@/components/ui/Reveal"
 
-const contactInfo = [
+const contactItems = [
   {
     icon: Mail,
     label: "Email",
@@ -32,32 +22,12 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Location",
-    value: "Savar, Dhaka-1340, Bangladesh",
-    href: null,
-  },
-]
-
-const socialLinks = [
-  {
-    icon: Github,
-    label: "GitHub",
-    href: "https://github.com/rasel754",
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/rasel754",
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    href: "mailto:raselahmed73614@gmail.com",
+    value: "Savar, Dhaka, Bangladesh",
+    href: "https://maps.google.com/?q=Savar,Dhaka,Bangladesh",
   },
 ]
 
 export default function ContactSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [responseMessage, setResponseMessage] = useState("")
@@ -102,9 +72,7 @@ export default function ContactSection() {
     }
   }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -112,232 +80,147 @@ export default function ContactSection() {
   }
 
   return (
-    <section
-      id="contact"
-      ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
-    >
-      <div className="absolute inset-0 grid-pattern opacity-20" />
+    <section id="contact" className="relative py-24 md:py-32 overflow-hidden max-w-6xl mx-auto px-6 md:px-8">
+      {/* Background Dot pattern overlay */}
+      <div className="absolute inset-0 dot-pattern opacity-20 pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-primary">
-            Get In Touch
-          </span>
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            Contact Me
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Have a project in mind or want to discuss an opportunity? I&apos;d
-            love to hear from you. Let&apos;s create something amazing together.
-          </p>
-        </motion.div>
+      <Reveal>
+        <SectionHeader tagline="get_in_touch" title="Contact Me" />
+      </Reveal>
 
-        <div className="grid gap-12 lg:grid-cols-2">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-8"
-          >
-            <div>
-              <h3 className="mb-6 font-heading text-2xl font-semibold text-foreground">
-                Let&apos;s Connect
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                I&apos;m always open to discussing new projects, creative ideas,
-                or opportunities to be part of your visions. Feel free to reach
-                out through any of the following channels.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {contactInfo.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  className="group"
-                >
-                  {item.href ? (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12 items-start">
+        {/* Left Column - Contact info cards */}
+        <div className="lg:col-span-5 space-y-4">
+          <Reveal delay={0.1}>
+            <p className="text-[#8b8ba7] leading-relaxed mb-6">
+              I'm always open to discussing new projects, design systems, API builds, or opportunities to join your product team. Send a note, and let's work together.
+            </p>
+          </Reveal>
+          {contactItems.map((item, index) => {
+            const Icon = item.icon
+            return (
+              <Reveal key={index} delay={0.1 * index + 0.2}>
+                <div className="flex items-center gap-4 bg-surface border border-border-subtle rounded-2xl p-5 hover:border-accent/30 transition-all duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+                    <Icon size={20} />
+                  </div>
+                  <div>
+                    <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                      {item.label}
+                    </p>
                     <a
-                      href={item.href}
-                      className="flex items-center gap-4 rounded-xl border border-border bg-card/50 p-4 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80"
+                      href={item.href || "#"}
+                      target={item.href?.startsWith("http") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      className="text-[#f0f0ff] font-semibold hover:text-accent transition-colors text-sm md:text-base break-all"
                     >
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
-                        <item.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          {item.label}
-                        </p>
-                        <p className="font-medium text-foreground transition-colors group-hover:text-primary">
-                          {item.value}
-                        </p>
-                      </div>
+                      {item.value}
                     </a>
-                  ) : (
-                    <div className="flex items-center gap-4 rounded-xl border border-border bg-card/50 p-4 backdrop-blur-sm">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                        <item.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          {item.label}
-                        </p>
-                        <p className="font-medium text-foreground">
-                          {item.value}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
+                  </div>
+                </div>
+              </Reveal>
+            )
+          })}
+        </div>
 
-            <div>
-              <h4 className="mb-4 font-heading text-lg font-semibold text-foreground">
-                Follow Me
-              </h4>
-              <div className="flex gap-3">
-                {socialLinks.map((link, index) => (
-                  <motion.a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary hover:bg-primary/10"
-                    aria-label={link.label}
-                  >
-                    <link.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="relative overflow-hidden rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm">
-              <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl" />
-              <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 blur-3xl" />
-
-              <form onSubmit={handleSubmit} className="relative space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-foreground">
+        {/* Right Column - Contact form */}
+        <div className="lg:col-span-7">
+          <Reveal delay={0.3}>
+            <div className="bg-surface border border-border-subtle rounded-2xl p-8 relative overflow-hidden">
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                {/* Form Name field */}
+                <div className="space-y-1">
+                  <label className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
                     Name
-                  </Label>
-                  <Input
+                  </label>
+                  <input
                     id="name"
                     name="name"
+                    type="text"
+                    required
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your name"
-                    required
-                    className="border-border bg-background/50 transition-all focus:border-primary focus:ring-primary"
+                    className="w-full bg-elevated border border-border-subtle rounded-xl px-4 py-3 text-[#f0f0ff] placeholder-[#4a4a6a] focus:border-accent focus:outline-none focus:shadow-glow-sm transition-all text-sm"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground">
+                {/* Form Email field */}
+                <div className="space-y-1">
+                  <label className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
                     Email
-                  </Label>
-                  <Input
+                  </label>
+                  <input
                     id="email"
                     name="email"
                     type="email"
+                    required
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your.email@example.com"
-                    required
-                    className="border-border bg-background/50 transition-all focus:border-primary focus:ring-primary"
+                    className="w-full bg-elevated border border-border-subtle rounded-xl px-4 py-3 text-[#f0f0ff] placeholder-[#4a4a6a] focus:border-accent focus:outline-none focus:shadow-glow-sm transition-all text-sm"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-foreground">
+                {/* Form Message field */}
+                <div className="space-y-1">
+                  <label className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
                     Message
-                  </Label>
-                  <Textarea
+                  </label>
+                  <textarea
                     id="message"
                     name="message"
+                    required
+                    rows={5}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell me about your project..."
-                    required
-                    rows={5}
-                    className="border-border bg-background/50 resize-none transition-all focus:border-primary focus:ring-primary"
+                    className="w-full bg-elevated border border-border-subtle rounded-xl px-4 py-3 text-[#f0f0ff] placeholder-[#4a4a6a] focus:border-accent focus:outline-none focus:shadow-glow-sm transition-all text-sm resize-none"
                   />
                 </div>
 
-                <Button
+                {/* Submit button */}
+                <button
                   type="submit"
-                  size="lg"
                   disabled={isSubmitting || isSubmitted}
-                  className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                  className="w-full bg-accent hover:shadow-glow-md text-white font-semibold rounded-xl py-3.5 transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                        className="h-5 w-5 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
-                      />
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
                       Sending...
                     </span>
                   ) : isSubmitted ? (
-                    <span className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5" />
-                      Message Sent!
-                    </span>
+                    "Message Sent!"
                   ) : (
-                    <span className="flex items-center gap-2">
-                      <Send className="h-5 w-5" />
-                      Send Message
-                    </span>
+                    "Send Message →"
                   )}
-                </Button>
+                </button>
 
                 {responseMessage && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
                     className={`p-4 rounded-xl text-sm font-medium border flex items-start gap-3 backdrop-blur-sm ${
-                      isSubmitted 
-                        ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' 
-                        : 'bg-destructive/10 border-destructive/20 text-destructive'
+                      isSubmitted
+                        ? "bg-green-500/10 border-green-500/20 text-green-400"
+                        : "bg-red-500/10 border-red-500/20 text-red-400"
                     }`}
                   >
                     {isSubmitted ? (
-                      <CheckCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 shrink-0" />
                     ) : (
-                      <div className="h-5 w-5 shrink-0 rounded-full border-2 border-current flex items-center justify-center mt-0.5"><span className="text-xs">!</span></div>
+                      <AlertCircle className="w-5 h-5 shrink-0" />
                     )}
                     <p>{responseMessage}</p>
                   </motion.div>
                 )}
               </form>
             </div>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>
