@@ -1,102 +1,149 @@
-# 🌐 Mine Portfolio
+# 🌐 Rasel Ahmed | Professional Full Stack Portfolio
 
-> A modern, dynamic, and production-ready portfolio application with an integrated administrative dashboard.
+A clean, modern, and highly interactive developer portfolio featuring a dynamic 3D interactive user interface, dark/light theme options, and an integrated admin dashboard.
 
-## 📌 Overview
-Mine Portfolio is a full-stack capable frontend application designed to showcase technical skills, professional projects, and personal blogs. It serves as both a public-facing resume and a private content management system. It solves the problem of static portfolios by connecting to a backend REST API, allowing the owner to update their skills, projects, tools, and blog posts directly from a custom admin dashboard without deploying new code.
+---
 
-## 🛠️ Tech Stack
-This project leverages a modern React ecosystem focused on performance, accessibility, and high-quality UI/UX:
-- **Framework:** Next.js 15 (App Router), React 19
-- **Styling:** Tailwind CSS, next-themes (Dark/Light mode)
-- **UI Components:** Radix UI primitives, shadcn/ui
-- **Animations & 3D:** Framer Motion, Three.js (@react-three/fiber, @react-three/drei)
-- **Forms & Validation:** React Hook Form, Zod
-- **Data Visualization:** Recharts
-- **Icons:** Lucide React
+### 🔗 Quick Links
+- **Live Demo:** [https://portfolio-iota-two-90.vercel.app/](https://portfolio-iota-two-90.vercel.app/)
+- **GitHub Repository:** [https://github.com/rasel754/portfolio](https://github.com/rasel754/portfolio)
+- **Backend API Base:** `https://portfolio-server-blush-one.vercel.app/api/p4`
+
+---
+
+## 🔰 Project Information
+
+- **Project Name:** Rasel Ahmed | MERN Stack Developer Portfolio
+- **Overview:**
+  A dynamic full-stack developer portfolio and personal CMS (Content Management System) designed to showcase projects, skills, blogs, and tools. Built with a Next.js 15 frontend, the project communicates with a Node.js/Express REST API backend to dynamically render content. Rather than redeploying code, the author can manage all public-facing information directly from a secure, custom administration dashboard interface.
+
+- **Project Screenshot:**
+  *(No screenshot provided. Replace this line with an image tag when available)*
+  ```markdown
+  <!-- ![Portfolio Screenshot](path/to/screenshot.png) -->
+  ```
+
+---
+
+## ⚙️ Technology Stack
+
+| Layer | Technologies Used |
+| :--- | :--- |
+| **Frontend Core** | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React 19](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) |
+| **Styling & UI** | ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) `next-themes` (Dark/Light mode) `Radix UI` primitives |
+| **Animations & 3D** | ![Three.js](https://img.shields.io/badge/Three.js-black?style=flat-square&logo=threedotjs&logoColor=white) `@react-three/fiber` `@react-three/drei` `Framer Motion` |
+| **Forms & Verification** | `React Hook Form` ![Zod](https://img.shields.io/badge/Zod-3068b7?style=flat-square&logo=zod&logoColor=white) |
+| **Backend Integration** | ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white) REST API |
+| **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) (via API backend) |
+| **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) |
+
+---
 
 ## ✨ Features
-- **Dynamic Content:** Projects, skills, tools, and blog posts are fetched dynamically from the backend API.
-- **Admin Dashboard (`/rasel754`):** A secure, minimalistic interface to perform CRUD operations on portfolio content and read incoming contact messages.
-- **Engaging UI/UX:** Smooth page transitions, scroll animations, and interactive 3D elements.
-- **Contact System:** A fully functional contact form that saves messages to the database.
-- **Fully Responsive:** Optimized layouts for mobile, tablet, and desktop devices.
-- **Accessible:** Built with Radix UI to ensure keyboard navigation and screen reader compatibility.
 
-## 🔗 API Integration
-The frontend is designed to communicate seamlessly with a dedicated Node.js/Express backend via REST API.
-- **Base URL (Local):** `https://portfolio-server-blush-one.vercel.app/api/p4` (Configurable via Environment Variables)
-- **Architecture:** Client components fetch data for public display (Projects, Blogs, Skills), while the admin dashboard interacts with protected routes for creating, updating, and deleting content.
+- **🌐 Dynamic Content Integration:** Projects, blogs, tools, and technical skills are fetched live from a REST API backend.
+- **🛡️ Secure Administrative Dashboard:** Accessible via `/rasel754` with complete CRUD capabilities for projects, blogs, skills, and tools, as well as a client contact message viewer.
+- **✨ Premium UI/UX Animations:** Powered by Three.js and Framer Motion, presenting elegant scroll-based transitions, cursor glow effects, and a responsive CSS starfield backdrop.
+- **✉️ Direct Contact System:** Clean form interface with live client-side validation (via React Hook Form & Zod) that pushes messages straight to the administrative backend.
+- **📱 Fully Responsive & Accessible:** Fully mobile-first design using Tailwind CSS with standard accessibility protocols via Radix UI primitives.
 
-## 📂 Project Structure
-- `app/`: Next.js App Router configuration.
-  - `(public routes)`: `page.tsx` (Home), `/projects`, `/blog`
-  - `rasel754/`: Admin dashboard routes and management interfaces.
-- `components/`: Reusable React components (UI elements, sections like `hero-section`, `about-section`).
-- `hooks/`: Custom React hooks.
-- `lib/`: Utility functions and helper modules.
-- `public/`: Static assets (images, fonts).
-- `styles/`: Global CSS and Tailwind configurations.
+---
 
-## ⚙️ Getting Started
+## 📦 Dependencies
+
+### Core Frontend Stack
+- `next` (v15.2.9)
+- `react` / `react-dom` (v19)
+- `typescript` (v5)
+
+### UI, Theme, & Animation
+- `tailwindcss` (v3.4.17)
+- `framer-motion`
+- `three` & `@react-three/fiber` / `@react-three/drei`
+- `next-themes`
+- `@radix-ui` (React dialog, dropdown menu, alert-dialog, slider, tabs, slot, label)
+- `lucide-react` (for icons)
+- `class-variance-authority` & `clsx` & `tailwind-merge` & `tailwindcss-animate`
+
+### Forms & Validation
+- `react-hook-form`
+- `zod`
+- `@emotion/is-prop-valid`
+
+---
+
+## 🚀 Run Locally
+
+Follow these step-by-step instructions to get a copy of the project running on your local machine:
 
 ### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm, yarn, or pnpm
+- **Node.js** (v18.x or later recommended)
+- **npm** (v9.x or later) or **yarn** / **pnpm**
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone <YOUR_GITHUB_REPO_URL>
-   cd portfolio
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   # or yarn install / pnpm install
-   ```
+### 1. Clone the repository
+```bash
+git clone https://github.com/rasel754/portfolio.git
+cd portfolio
+```
 
-### Environment Variables
-Create a `.env.local` file in the root directory and add the following:
+### 2. Install dependencies
+Install all project dependencies locally:
+```bash
+npm install
+```
+
+### 3. Setup environment variables
+Create a `.env.local` file in the root directory:
+
 ```env
-# Example Environment Variables
 NEXT_PUBLIC_API_URL=https://portfolio-server-blush-one.vercel.app/api/p4
 ```
 
-### Run the Project
-Start the development server:
+### 4. Run the project locally
+Start the Next.js development server:
 ```bash
 npm run dev
-# or yarn dev / pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-## 🚀 Build & Deployment
-This Next.js application is optimized for deployment on platforms like Vercel or Netlify.
+Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
-To build the project locally:
+---
+
+## 🛠️ Build and Production Deployments
+
+To build the project for production distribution:
 ```bash
 npm run build
 ```
-To start the production build:
+
+To run the production build locally:
 ```bash
 npm run start
 ```
 
-## 📱 Responsiveness
-The application utilizes Tailwind CSS's mobile-first approach, ensuring a flawless experience across:
-- **Mobile Devices** (Smartphones)
-- **Tablets** (iPads, Android tablets)
-- **Desktop** (Laptops, large monitors)
+---
 
 ## 🤝 Contributing
-While this is a personal portfolio, suggestions and improvements are welcome. Please feel free to fork the repository and submit a pull request.
+
+Suggestions, feature requests, and bug reports are welcome.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
 
 ## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
 
 ## 👨‍💻 Author
-**[Your Name / Placeholder]**
-- GitHub: [Your GitHub Profile]
-- LinkedIn: [Your LinkedIn Profile]
-- Portfolio: [Live Link Placeholder]
+
+**Rasel Ahmed**
+* **GitHub:** [@rasel754](https://github.com/rasel754)
+* **Live Portfolio:** [portfolio-iota-two-90.vercel.app](https://portfolio-iota-two-90.vercel.app/)
+* **Linkedin:** [https://www.linkedin.com/in/rasel754](https://www.linkedin.com/in/rasel754)
+
